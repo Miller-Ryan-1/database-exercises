@@ -1,8 +1,8 @@
-use employees;
+USE employees;
 -- Selects the employees database to use
-show tables;
+SHOW tables;
 -- Lists all tables in the employees database
-describe employees;
+DESCRIBE employees;
 -- Describes employees table (of the employees database).  Includes INT, VARCHAR, DATE, and ENUM data types. 
 
 /* 
@@ -18,13 +18,13 @@ Q8:  Which table(s) do you think contain a date type column?
 A8: dept_emp, dept_manager, employees, salaries, titles
 */
 
-describe dept_emp;
+DESCRIBE dept_emp;
 /*
 Q9:  What is the relationship between the [employees] and [departments] tables?
 A9:  There is no direct relationship, however they are linked through their primary keys in the dept_emp table.  
 */
 
-show create table dept_manager;
+SHOW CREATE TABLE dept_manager;
 
 /*
 'CREATE TABLE `dept_manager` (

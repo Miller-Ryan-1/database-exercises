@@ -8,6 +8,7 @@ FROM albums;
 SELECT DISTINCT artist 
 FROM albums;
 -- 3b: There are 23 unique artists.
+-- Also: SELECT COUNT(DISTINCT artist) FROM albums;
 
 DESCRIBE albums;
 -- 3c: Primary key is 'id'
@@ -25,8 +26,9 @@ SELECT name FROM albums WHERE release_date > 1989 AND release_date < 2000;
 
 SELECT name FROM albums WHERE sales < 20.0;
 
-SELECT name FROM albums WHERE genre >= 'Rock';
+SELECT name, genre FROM albums WHERE genre >= 'Rock';
 -- SQL evalautes each word seperated by commons independantly for 'Rock' only
+
 
 
 

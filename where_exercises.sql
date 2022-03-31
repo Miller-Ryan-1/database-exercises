@@ -6,14 +6,14 @@ SELECT
 FROM
     employees
 WHERE
-    first_name IN ('Irene' , 'Vidya', 'Maya');
+    first_name IN ('Irena' , 'Vidya', 'Maya');
 SELECT 
     COUNT(*)
 FROM
     employees
 WHERE
-    first_name IN ('Irene' , 'Vidya', 'Maya');
--- 2. There are 731 records of employees with those names.
+    first_name IN ('Irena' , 'Vidya', 'Maya');
+-- 2. There are 709 records of employees with those names.
 
 
 SELECT 
@@ -21,7 +21,7 @@ SELECT
 FROM
     employees
 WHERE
-    (first_name = 'Irene'
+    (first_name = 'Irena'
         OR first_name = 'Vidya'
         OR first_name = 'Maya');
 SELECT 
@@ -29,10 +29,10 @@ SELECT
 FROM
     employees
 WHERE
-    (first_name = 'Irene'
+    (first_name = 'Irena'
         OR first_name = 'Vidya'
         OR first_name = 'Maya');
--- 3. Row count was the same, as expected.
+-- 3. Row count was the same (709), as expected.
 
 
 SELECT 
@@ -40,7 +40,7 @@ SELECT
 FROM
     employees
 WHERE
-    (first_name = 'Irene'
+    (first_name = 'Irena'
         OR first_name = 'Vidya'
         OR first_name = 'Maya')
         AND gender = 'M';
@@ -49,11 +49,11 @@ SELECT
 FROM
     employees
 WHERE
-    (first_name = 'Irene'
+    (first_name = 'Irena'
         OR first_name = 'Vidya'
         OR first_name = 'Maya')
         AND gender = 'M';
--- 4. 455 records.
+-- 4. 441 records.
 
 
 SELECT 

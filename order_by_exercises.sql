@@ -69,6 +69,6 @@ SELECT
 FROM
     employees
 WHERE
-    birth_date LIKE '____-12-25' and hire_date LIKE '1990-__-__'
+    birth_date LIKE '____-12-25' and hire_date LIKE '199_-__-__'
 ORDER BY birth_date, hire_date DESC;
--- 7.  Oldest + last hired: Anwar Collavizza; Youngest+ first hired: Douadi Pettis.
+-- 7.  Oldest + last hired: Khun Bernini; Youngest+ first hired: Douadi Pettis.

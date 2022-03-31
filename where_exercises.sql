@@ -141,14 +141,14 @@ SELECT
 FROM
     employees
 WHERE
-    birth_date LIKE '____-12-25' and hire_date LIKE '1990-__-__';
+    birth_date LIKE '____-12-25';
 SELECT 
     COUNT(*)
 FROM
     employees
 WHERE
-    birth_date LIKE '____-12-25' and hire_date LIKE '1990-__-__';
--- 9. 77 employees born on Christmas and hried in the 90s.
+    birth_date LIKE '____-12-25';
+-- 9. 842 employees born on Christmas.
 
 
 SELECT 
@@ -156,14 +156,14 @@ SELECT
 FROM
     employees
 WHERE
-    birth_date LIKE '199_-12-25';
+    birth_date LIKE '____-12-25' and hire_date LIKE '1990-__-__';
 SELECT 
     COUNT(*)
 FROM
     employees
 WHERE
-    birth_date LIKE '199_-12-25';
--- 9. 842 employees born on Christmas.
+    birth_date LIKE '____-12-25' and hire_date LIKE '1990-__-__';
+-- 10. 77 employees born on Christmas and hired in the 90s.
 
 
 SELECT
@@ -179,6 +179,7 @@ FROM
 WHERE
     last_name LIKE '%q%';
 -- 11. 1873 records with a 'q' in the last name.
+
 
 SELECT 
     *

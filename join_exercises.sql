@@ -72,6 +72,7 @@ FROM
 WHERE
     dept_name = 'Customer Service'
         AND titles.to_date > NOW()
+        AND dept_emp.to_date > NOW()
 GROUP BY Title
 ORDER BY Title;
 
@@ -163,10 +164,64 @@ ORDER BY salary DESC
 LIMIT 1;
 
 #10
-SELECT departments.dept_name, ROUND(AVG(salaries.salary)) AS average_salary
-FROM employees JOIN dept_emp ON dept_emp.emp_no = employees.emp_no JOIN salaries ON salaries.emp_no = dept_emp.emp_no
-JOIN departments ON departments.dept_no = dept_emp.dept_no
-GROUP BY departments.dept_name;
+SELECT 
+    departments.dept_name, ROUND(AVG(salaries.salary)) AS average_salary
+FROM
+    employees
+        JOIN
+    dept_emp USING(emp_no) -- ON dept_emp.emp_no = employees.emp_no
+        JOIN
+    salaries USING(emp_no) -- ON salaries.emp_no = dept_emp.emp_no
+        JOIN
+    departments USING(dept_no) -- ON departments.dept_no = dept_emp.dept_no
+GROUP BY departments.dept_name ORDER BY average_salary DESC;
 
-#11 - ASK ON MONDAY -> How do you create a results column that is itself found via a JOIN?
-#SELECT CONCAT(employees.first_name,' ',employees.last_name) AS 'Employee Name', departments.dept_name AS 'Department Name', 
+#11 (BONUS)
+SELECT 
+    CONCAT(employees.first_name,
+            ' ',
+            employees.last_name) AS 'Employee Name',
+    departments.dept_name AS 'Department Name',
+    a.manager_name AS 'Manager Name'
+FROM
+    employees
+        JOIN
+    dept_emp ON employees.emp_no = dept_emp.emp_no
+        JOIN
+    departments ON dept_emp.dept_no = departments.dept_no
+        JOIN
+    (SELECT 
+        CONCAT(employees.first_name, ' ', employees.last_name) AS manager_name,
+            dept_no
+    FROM
+        employees
+    JOIN dept_manager ON employees.emp_no = dept_manager.emp_no
+    WHERE
+        to_date > NOW()) AS a ON a.dept_no = departments.dept_no
+WHERE
+    dept_emp.to_date > NOW();
+
+#12 (BONUS)
+SELECT 
+    dept_name AS 'Department',
+    CONCAT(employees.first_name,
+            ' ',
+            employees.last_name) AS 'Highest Paid Employee'
+FROM
+    departments
+        JOIN
+    (SELECT 
+        dept_no, MAX(salary) AS max_salary
+    FROM
+        dept_emp
+    JOIN salaries USING (emp_no)
+    WHERE
+        dept_emp.to_date > NOW()
+    GROUP BY dept_no) AS a USING (dept_no)
+        JOIN
+    salaries ON a.max_salary = salaries.salary
+        JOIN
+    employees USING (emp_no);
+
+
+

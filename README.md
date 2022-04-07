@@ -1,1 +1,1 @@
-Apparently, this repo is where our MySQL exercises will go :-)
+This repo contains me Codeup MySQL exercises!

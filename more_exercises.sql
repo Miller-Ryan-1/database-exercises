@@ -107,6 +107,7 @@ SELECT film.title, film.description, film.release_year, language.name FROM film 
 SELECT staff.first_name, staff.last_name, address.address, address.address2, city.city, address.district, address.postal_code FROM staff LEFT JOIN address USING(address_id) LEFT JOIN city USING(city_id);
 
 
+
 ##USING SAKILA DATABASE - OPEN EXERCISES
 USE sakila;
 
@@ -129,9 +130,123 @@ SELECT country_id, country FROM country WHERE country IN ('Afghanistan', 'Bangla
 SELECT last_name, COUNT(*) AS count FROM actor GROUP BY last_name;
 
 #7. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors
--- SELECT last_name, (SELECT COUNT(last_name) FROM actor WHERE COUNT(last_name) > 1) FROM actor GROUP BY last_name;
+SELECT last_name, COUNT(*) FROM actor GROUP BY last_name HAVING COUNT(*)>1;
 
 #8. You cannot locate the schema of the address table. Which query would you use to re-create it?
 DESCRIBE address;
 
-#9. 
+#9. Use JOIN to display the first and last names, as well as the address, of each staff member.
+SELECT staff.first_name, staff.last_name, address.address FROM staff JOIN address USING(address_id);
+
+#10. Use JOIN to display the total amount rung up by each staff member in August of 2005.
+SELECT CONCAT(staff.first_name,' ', staff.last_name) AS full_name, SUM(sales_table.amount) FROM staff JOIN (SELECT staff_id, amount FROM payment WHERE payment_date LIKE '2005-08%') AS sales_table USING(staff_id) GROUP BY full_name;
+
+#11. List each film and the number of actors who are listed for that film.
+SELECT film.title, COUNT(film_actor.actor_id) FROM film JOIN film_actor USING(film_id) GROUP BY film.title;
+
+#12. How many copies of the film Hunchback Impossible exist in the inventory system?
+SELECT COUNT(film_id) FROM inventory WHERE film_id = (SELECT film_id FROM film WHERE title = 'Hunchback Impossible');
+
+#13. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. Use subqueries to display the titles of movies starting with the letters K and Q whose language is English.
+SELECT title FROM film WHERE (title LIKE 'Q%' OR title LIKE 'K%') AND language_id = (SELECT language_id FROM language WHERE name = 'English');
+
+#14. Use subqueries to display all actors who appear in the film Alone Trip.
+SELECT CONCAT(first_name, ' ', last_name) FROM actor WHERE actor_id IN (SELECT actor_id FROM film_actor JOIN film USING(film_id) WHERE film_id = (SELECT film_id FROM film WHERE title = 'Alone Trip'));
+
+#15. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers.
+-- SELECT CONCAT(customer.first_name, ' ', customer.last_name), FROM customer ;
+-- We can work back from the city to find customers name, email where customer.address_id <address_id>  <city_id> city.city_id <country_id> country.country = 'Canada'
+
+#16. 
+#17.
+#18.
+#19.
+
+
+
+## USING SAKILA DATABASE - CHECK EXERCISES
+USE sakila;
+
+#1. What is the average replacement cost of a film? Does this change depending on the rating of the film?
+SELECT AVG(replacement_cost) FROM film;
+SELECT rating, AVG(replacement_cost) FROM film GROUP BY rating ORDER BY rating;
+
+#2. How many different films of each genre are in the database?
+SELECT category.name, COUNT(category.name) FROM category JOIN film_category USING(category_id) JOIN film USING(film_id) GROUP BY category.name;
+
+#3. What are the 5 [most] frequently rented films?
+SELECT MAX(inventory_id) FROM rental;
+
+#4. What are the most most profitable films (in terms of gross revenue)?
+SELECT film.title, SUM(payment.amount) AS total FROM film JOIN inventory USING(film_id) JOIN rental USING(inventory_id) JOIN payment USING(rental_id) GROUP BY film.title ORDER BY total DESC LIMIT 5;
+
+#5. Who is the best customer?
+SELECT CONCAT(customer.last_name, ', ',customer.first_name) AS name, total FROM customer JOIN (SELECT customer_id, SUM(amount) AS total FROM payment GROUP BY customer_id ORDER BY SUM(amount) DESC LIMIT 1) AS top_payer USING(customer_id);
+
+#6. Who are the most popular actors (that have appeared in the most films)?
+SELECT CONCAT(actor.last_name, ', ',actor.first_name) AS name, total FROM actor JOIN (SELECT film_actor.actor_id, COUNT(film.title) AS total FROM film_actor JOIN film USING(film_id) GROUP BY film_actor.actor_id ORDER BY total DESC LIMIT 5) AS top_actors USING(actor_id);
+
+#7. What are the sales for each store for each month in 2005?
+SELECT CASE WHERE ;
+
+#8 (BONUS).
+
+
+
+## USING EMPLOYEES DATABASE - SINGLE QUESTION
+USE employees;
+
+#1. How much do the current managers of each department get paid, relative to the average salary for the department? Is there any department where the department manager gets paid less than the average salary?
+
+
+
+## USING WORLD DATABASE - CHECK EXERCISES
+USE world;
+
+#1. What languages are spoken in Santa Monica?
+SELECT countrylanguage.Language, countrylanguage.Percentage FROM countrylanguage JOIN (SELECT CountryCode FROM city WHERE Name = 'Santa Monica') as santa_monica_languages USING(CountryCode) ORDER BY countrylanguage.Percentage;
+
+#2. How many different countries are in each region?
+SELECT Region, COUNT(*) AS num_countries FROM country GROUP BY Region ORDER BY num_countries;
+
+#3. What is the population for each region?
+SELECT Region, SUM(Population) AS population FROM country GROUP BY Region ORDER BY population DESC;
+
+#4. What is the population for each continent?
+SELECT Continent, SUM(Population) AS population FROM country GROUP BY Continent ORDER BY population DESC;
+
+#5. What is the average life expectancy globally?
+SELECT AVG(LifeExpectancy) FROM country;
+
+#6. What is the average life expectancy for each region, each continent? Sort the results from shortest to longest
+SELECT Region, AVG(LifeExpectancy) AS life_expectancy FROM country GROUP BY Region ORDER BY life_expectancy;
+SELECT Continent, AVG(LifeExpectancy) AS life_expectancy FROM country GROUP BY Continent ORDER BY life_expectancy;
+
+#7 (BONUS). Find all the countries whose local name is different from the official name
+SELECT Name, LocalName FROM country WHERE LocalName != Name;
+
+
+
+## USING PIZZA DATABASE - ADVANCED EXERCISES
+USE pizza;
+
+#1. What information is stored in the toppings table? How does this table relate to the pizzas table?
+SELECT * FROM toppings;
+SELECT * FROM pizza_toppings;
+SELECT * FROM pizzas;
+-- The name, price and a PK called 'topping_id' which is how it can be related to the pizza_id (which seemingly contains all permutations of pizza toppings) in the pizzas table via the pizza_toppings table.
+
+#2. What information is stored in the modifiers table? How does this table relate to the pizzas table?
+SELECT * from modifiers;
+-- Modifiers has three seperate pizza modifiers - extra cheese, well done, no cheese.  Extra cheese has a price of $1.99 while the other two are gratis.alter
+
+
+
+
+
+
+
+
+
+
+
